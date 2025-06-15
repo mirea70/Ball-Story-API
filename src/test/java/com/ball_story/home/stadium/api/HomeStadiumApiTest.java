@@ -1,7 +1,8 @@
 package com.ball_story.home.stadium.api;
 
-import com.ball_story.common.enums.Team;
 import com.ball_story.home.stadium.dto.StadiumCreateRequest;
+import com.ball_story.home.stadium.dto.StadiumResponse;
+import com.ball_story.home.stadium.helper.HomeStadiumHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
@@ -25,7 +25,7 @@ public class HomeStadiumApiTest {
     private int port;
     private RestClient restClient;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private HomeStadiumHelper homeStadiumHelper;
 
     @BeforeAll
     public void setup() {
@@ -34,23 +34,53 @@ public class HomeStadiumApiTest {
 
     @Test
     public void createTest() {
-        ResponseEntity<?> response = create(new StadiumCreateRequest(
-                "홈구장명",
-                Team.SAMSUNG,
-                1L
-        ));
+        ResponseEntity<Long> response = create(
+                homeStadiumHelper.getTestCreateRequest()
+        );
 
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-
-        Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM home_stadium", Integer.class);
-        log.info("Data count = {}", count);
+        assertThat(response.getBody()).isNotNull();
+        log.info("stadiumId = {}", response.getBody());
     }
 
-    private ResponseEntity<Void> create(StadiumCreateRequest request) {
+    @Test
+    public void updateNameTest() {
+        Long stadiumId = create(
+                homeStadiumHelper.getTestCreateRequest()
+        ).getBody();
+        StadiumResponse createResponse = findOne(stadiumId).getBody();
+
+        String testName = "변경네임";
+        ResponseEntity<?> response = updateName(createResponse.getStadiumId(), testName);
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+
+        StadiumResponse afterUpdateResponse = findOne(
+                createResponse.getStadiumId()
+        ).getBody();
+        assertThat(afterUpdateResponse.getName()).isEqualTo(testName);
+        assertThat(afterUpdateResponse.getUpdatedAt()).isAfter(createResponse.getUpdatedAt());
+
+        log.info("stadiumId = {}, name = {}", afterUpdateResponse.getStadiumId(), afterUpdateResponse.getName());
+    }
+
+    private ResponseEntity<Long> create(StadiumCreateRequest request) {
         return restClient.post()
                 .uri("/v1/stadiums")
                 .body(request)
+                .retrieve()
+                .toEntity(Long.class);
+    }
+
+    private ResponseEntity<StadiumResponse> findOne(Long stadiumId) {
+        return restClient.get()
+                .uri("/v1/stadiums/{stadiumId}", stadiumId)
+                .retrieve()
+                .toEntity(StadiumResponse.class);
+    }
+
+    private ResponseEntity<Void> updateName(Long stadiumId, String name) {
+        return restClient.patch()
+                .uri("/v1/stadiums/{stadiumId}?name={name}", stadiumId, name)
                 .retrieve()
                 .toBodilessEntity();
     }

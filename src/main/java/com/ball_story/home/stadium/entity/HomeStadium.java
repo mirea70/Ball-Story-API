@@ -26,4 +26,9 @@ public class HomeStadium {
         homeStadium.updatedAt = LocalDateTime.now();
         return homeStadium;
     }
+
+    public void updateName(String name) {
+        this.name = name;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

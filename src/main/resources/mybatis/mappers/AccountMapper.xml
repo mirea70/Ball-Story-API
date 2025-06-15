@@ -6,11 +6,12 @@
 <mapper namespace="com.ball_story.home.account.repository.AccountRepository">
 
     <insert id="join" parameterType="Account" keyProperty="accountId">
-        INSERT INTO account (name, phone, point,
-                            profile_img_id, created_at, updated_at, deleted_at)
-        VALUES (#{name}, #{phone}, #{point},
-                #{profileImgId}, #{createdAt}, #{updatedAt},
-                #{deletedAt})
+        INSERT INTO account (
+                             name, phone, point, profile_img_id,
+                             created_at, updated_at, deleted_at
+                            )
+        VALUES (#{name}, #{phone}, #{point}, #{profileImgId},
+                #{createdAt}, #{updatedAt}, #{deletedAt})
     </insert>
 
 </mapper>
