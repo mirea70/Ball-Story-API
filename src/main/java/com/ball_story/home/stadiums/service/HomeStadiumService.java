@@ -1,9 +1,9 @@
-package com.ball_story.home.stadium.service;
+package com.ball_story.home.stadiums.service;
 
-import com.ball_story.home.stadium.dto.StadiumCreateRequest;
-import com.ball_story.home.stadium.dto.StadiumResponse;
-import com.ball_story.home.stadium.entity.HomeStadium;
-import com.ball_story.home.stadium.repository.HomeStadiumRepository;
+import com.ball_story.home.stadiums.dto.StadiumCreateRequest;
+import com.ball_story.home.stadiums.dto.StadiumResponse;
+import com.ball_story.home.stadiums.entity.HomeStadium;
+import com.ball_story.home.stadiums.repository.HomeStadiumRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;

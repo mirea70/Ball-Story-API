@@ -1,4 +1,4 @@
-package com.ball_story.home.stadium.dto;
+package com.ball_story.home.stadiums.dto;
 
 import com.ball_story.common.enums.Team;
 import lombok.AllArgsConstructor;

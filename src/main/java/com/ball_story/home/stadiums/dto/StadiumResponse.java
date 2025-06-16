@@ -1,7 +1,7 @@
-package com.ball_story.home.stadium.dto;
+package com.ball_story.home.stadiums.dto;
 
 import com.ball_story.common.enums.Team;
-import com.ball_story.home.stadium.entity.HomeStadium;
+import com.ball_story.home.stadiums.entity.HomeStadium;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

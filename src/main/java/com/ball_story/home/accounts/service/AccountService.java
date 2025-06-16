@@ -1,8 +1,8 @@
-package com.ball_story.home.account.service;
+package com.ball_story.home.accounts.service;
 
-import com.ball_story.home.account.dto.AccountJoinRequest;
-import com.ball_story.home.account.entity.Account;
-import com.ball_story.home.account.repository.AccountRepository;
+import com.ball_story.home.accounts.dto.AccountJoinRequest;
+import com.ball_story.home.accounts.entity.Account;
+import com.ball_story.home.accounts.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

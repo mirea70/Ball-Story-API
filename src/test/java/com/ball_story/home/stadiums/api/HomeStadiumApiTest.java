@@ -1,8 +1,8 @@
-package com.ball_story.home.stadium.api;
+package com.ball_story.home.stadiums.api;
 
-import com.ball_story.home.stadium.dto.StadiumCreateRequest;
-import com.ball_story.home.stadium.dto.StadiumResponse;
-import com.ball_story.home.stadium.helper.HomeStadiumHelper;
+import com.ball_story.home.stadiums.dto.StadiumCreateRequest;
+import com.ball_story.home.stadiums.dto.StadiumResponse;
+import com.ball_story.home.stadiums.helper.HomeStadiumHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

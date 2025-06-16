@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.ball_story.home")
+@MapperScan("com.ball_story")
 public class BallStoryApplication {
 
 	public static void main(String[] args) {

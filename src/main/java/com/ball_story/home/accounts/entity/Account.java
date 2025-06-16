@@ -1,8 +1,7 @@
-package com.ball_story.home.account.entity;
+package com.ball_story.home.accounts.entity;
 
-import com.ball_story.home.account.dto.AccountJoinRequest;
+import com.ball_story.home.accounts.dto.AccountJoinRequest;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 

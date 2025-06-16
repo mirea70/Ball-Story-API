@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ball_story.home.account.repository.AccountRepository">
+<mapper namespace="com.ball_story.home.accounts.repository.AccountRepository">
 
     <insert id="join" parameterType="Account" keyProperty="accountId">
         INSERT INTO account (

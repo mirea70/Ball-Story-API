@@ -1,7 +1,7 @@
-package com.ball_story.home.account.controller;
+package com.ball_story.home.accounts.controller;
 
-import com.ball_story.home.account.dto.AccountJoinRequest;
-import com.ball_story.home.account.service.AccountService;
+import com.ball_story.home.accounts.dto.AccountJoinRequest;
+import com.ball_story.home.accounts.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,6 @@
-package com.ball_story.home.stadium.repository;
+package com.ball_story.home.stadiums.repository;
 
-import com.ball_story.home.stadium.entity.HomeStadium;
+import com.ball_story.home.stadiums.entity.HomeStadium;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;

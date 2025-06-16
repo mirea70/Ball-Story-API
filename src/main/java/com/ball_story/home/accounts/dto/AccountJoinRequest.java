@@ -1,4 +1,4 @@
-package com.ball_story.home.account.dto;
+package com.ball_story.home.accounts.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

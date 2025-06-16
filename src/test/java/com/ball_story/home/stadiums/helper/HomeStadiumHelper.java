@@ -1,7 +1,7 @@
-package com.ball_story.home.stadium.helper;
+package com.ball_story.home.stadiums.helper;
 
 import com.ball_story.common.enums.Team;
-import com.ball_story.home.stadium.dto.StadiumCreateRequest;
+import com.ball_story.home.stadiums.dto.StadiumCreateRequest;
 import org.springframework.stereotype.Component;
 
 @Component

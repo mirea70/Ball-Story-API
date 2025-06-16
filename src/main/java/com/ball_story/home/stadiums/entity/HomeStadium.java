@@ -1,7 +1,7 @@
-package com.ball_story.home.stadium.entity;
+package com.ball_story.home.stadiums.entity;
 
 import com.ball_story.common.enums.Team;
-import com.ball_story.home.stadium.dto.StadiumCreateRequest;
+import com.ball_story.home.stadiums.dto.StadiumCreateRequest;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

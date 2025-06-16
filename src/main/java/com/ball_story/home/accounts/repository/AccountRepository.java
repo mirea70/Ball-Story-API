@@ -1,6 +1,6 @@
-package com.ball_story.home.account.repository;
+package com.ball_story.home.accounts.repository;
 
-import com.ball_story.home.account.entity.Account;
+import com.ball_story.home.accounts.entity.Account;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

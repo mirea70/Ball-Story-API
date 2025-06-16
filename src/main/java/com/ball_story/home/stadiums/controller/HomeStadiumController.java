@@ -1,8 +1,8 @@
-package com.ball_story.home.stadium.controller;
+package com.ball_story.home.stadiums.controller;
 
-import com.ball_story.home.stadium.dto.StadiumCreateRequest;
-import com.ball_story.home.stadium.dto.StadiumResponse;
-import com.ball_story.home.stadium.service.HomeStadiumService;
+import com.ball_story.home.stadiums.dto.StadiumCreateRequest;
+import com.ball_story.home.stadiums.dto.StadiumResponse;
+import com.ball_story.home.stadiums.service.HomeStadiumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
