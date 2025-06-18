@@ -40,7 +40,7 @@ dependencies {
 
 	// DB
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+	implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.12'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 }
 
