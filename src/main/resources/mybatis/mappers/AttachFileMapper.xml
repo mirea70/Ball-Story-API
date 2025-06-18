@@ -7,9 +7,9 @@
 
     <insert id="save" parameterType="AttachFile" keyProperty="fileId">
         INSERT INTO attach_file (
-            name, path
+            file_id, name, path
         )
-        VALUES (#{name}, #{path})
+        VALUES (#{fileId}, #{name}, #{path})
     </insert>
 
     <select id="findById" resultType="AttachFile">

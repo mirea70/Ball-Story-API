@@ -3,11 +3,11 @@ package com.ball_story.home.files.module;
 import com.ball_story.common.files.dto.AttachFileResponse;
 import com.ball_story.common.files.repository.AttachFileRepository;
 import com.ball_story.common.files.service.AttachFileService;
+import com.ball_story.common.utils.SnowflakeIDGenerator;
 import com.ball_story.home.files.helper.FileTestHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.File;
@@ -21,6 +21,8 @@ public class FileModuleTest {
     @Autowired
     private AttachFileRepository attachFileRepository;
     @Autowired
+    private SnowflakeIDGenerator idGenerator;
+    @Autowired
     private FileTestHelper fileTestHelper;
 
     private final String rootPath = System.getProperty("user.home");
@@ -31,7 +33,7 @@ public class FileModuleTest {
         MockMultipartFile mockFile = fileTestHelper.getTestFile();
 
         // 업로드 테스트
-        AttachFileResponse response = attachFileService.uploadFile(mockFile);
+        AttachFileResponse response = attachFileService.uploadFile(idGenerator.nextId(), mockFile);
         File file = new File(getFullPath(response.getPath()));
         assertThat(file).exists();
         assertThat(attachFileRepository.findById(

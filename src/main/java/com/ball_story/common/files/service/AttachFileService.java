@@ -1,9 +1,10 @@
 package com.ball_story.common.files.service;
 
 import com.ball_story.common.errors.exceptions.FileRequestException;
-import com.ball_story.common.errors.exceptions.NotFoundException;
+import com.ball_story.common.errors.exceptions.SystemException;
 import com.ball_story.common.errors.results.FileErrorResult;
 import com.ball_story.common.errors.results.NotFoundErrorResult;
+import com.ball_story.common.errors.results.SystemErrorResult;
 import com.ball_story.common.files.dto.AttachFileResponse;
 import com.ball_story.common.files.entity.AttachFile;
 import com.ball_story.common.files.enums.FileExtension;
@@ -29,30 +30,43 @@ public class AttachFileService {
     private final String rootPath = System.getProperty("user.home");
     private final String fileDefaultDir = rootPath + "/files";
 
-    public List<AttachFileResponse> uploadFiles(List<MultipartFile> multipartFiles) throws IOException {
+    public List<AttachFileResponse> uploadFiles(List<Long> fileIds, List<MultipartFile> multipartFiles) throws IOException {
         if(multipartFiles == null || multipartFiles.isEmpty()) return  null;
+        if(fileIds.size() != multipartFiles.size()) {
+            throw new SystemException(SystemErrorResult.NOT_MATCH_FILE_ID_COUNT);
+        }
 
         List<AttachFileResponse> responses = new ArrayList<>();
-        for(MultipartFile file : multipartFiles) {
-            responses.add(this.uploadFile(file));
+        for(int i=0; i< fileIds.size(); i++) {
+            responses.add(this.uploadFile(fileIds.get(i), multipartFiles.get(i)));
         }
         return responses;
     }
 
-    public AttachFileResponse uploadFile(MultipartFile multipartFile) throws IOException {
+    public AttachFileResponse uploadFile(Long fileId, MultipartFile multipartFile) {
         if(multipartFile == null) return null;
 
         String path = getStoreFileName(multipartFile);
         File file = new File(getFullPath(path));
         if(!file.getParentFile().exists())
             file.getParentFile().mkdirs();
-        multipartFile.transferTo(file);
+        try {
+            multipartFile.transferTo(file);
+        } catch (IOException e) {
+            throw new FileRequestException(FileErrorResult.FAIL_UPLOAD_FILE, multipartFile.getOriginalFilename());
+        }
 
         AttachFile newFile = AttachFile.of(
+                fileId,
                 multipartFile.getOriginalFilename(),
                 path
         );
-        attachFileRepository.save(newFile);
+        try {
+            attachFileRepository.save(newFile);
+        } catch (Exception e) {
+            deleteFile(file);
+            throw new SystemException(SystemErrorResult.UNKNOWN);
+        }
 
         return AttachFileResponse.from(newFile);
     }
@@ -63,7 +77,6 @@ public class AttachFileService {
 
         String uploadFileName = file.getOriginalFilename();
         String extension = extractExt(uploadFileName);
-        validateFileExtension(extension);
 
         return rawFileName + "_" + UUID.randomUUID() + "." + extension;
     }
@@ -72,30 +85,45 @@ public class AttachFileService {
         boolean isMatched = Pattern.matches("^[a-zA-Zㄱ-힣0-9]*$", rawFileName);
         if(!isMatched) {
             log.error("[AttachFileService.validateFileName] Failed : {}", rawFileName);
-            throw new FileRequestException(FileErrorResult.NOT_MATCHING_NAME_RULE);
+            throw new FileRequestException(FileErrorResult.NOT_MATCHING_NAME_RULE, rawFileName);
         }
-    }
-
-    private void validateFileExtension(String requestExtension) {
-        List<String> extensions = FileExtension.getExtensions();
-        if(!extensions.contains(requestExtension))
-            throw new FileRequestException(FileErrorResult.NOT_SUPPORT_EXT);
     }
 
     private String extractExt(String uploadFileName) {
         int dotIndex = uploadFileName.lastIndexOf(".");
-        return uploadFileName.substring(dotIndex + 1);
+        String extension = uploadFileName.substring(dotIndex + 1);
+        if(!FileExtension.validate(extension)) {
+            throw new FileRequestException(FileErrorResult.NOT_SUPPORT_EXT, uploadFileName);
+        }
+
+        return extension;
     }
 
     private String getFullPath(String uploadFileName) {
         return fileDefaultDir + "/" + uploadFileName;
     }
 
+    /**
+     * 비동기 작업 필요
+     */
+    public void deleteFiles(List<Long> fileIds) {
+        for(Long fileId : fileIds) {
+            deleteFile(fileId);
+        }
+    }
+
     public void deleteFile(Long fileId) {
         if(fileId == null) return;
 
         AttachFile attachFile = attachFileRepository.findById(fileId)
-                .orElseThrow(() -> new NotFoundException(NotFoundErrorResult.NOT_FOUND_FILE_DATA));
+                .orElse(null);
+        if(attachFile == null) {
+            log.error(
+                    NotFoundErrorResult.NOT_FOUND_FILE_DATA.name() + " occur.\n"
+                            + NotFoundErrorResult.NOT_FOUND_FILE_DATA + "\n fileId = {}", fileId
+            );
+            return;
+        }
 
         File file = new File(getFullPath(attachFile.getPath()));
         if(file.exists()) {
@@ -103,10 +131,27 @@ public class AttachFileService {
                 attachFileRepository.delete(fileId);
             }
             else {
-                throw new FileRequestException(FileErrorResult.FAIL_REMOVE_FILE);
+                throw new FileRequestException(FileErrorResult.FAIL_REMOVE_FILE, attachFile.getName());
             }
         } else {
-            log.error("not exist file - id : {}, - path : {}", fileId, attachFile.getPath());
+            log.error(
+                    NotFoundErrorResult.NOT_EXIST_FILE_PATH.name() + " occur.\n"
+                            + NotFoundErrorResult.NOT_EXIST_FILE_PATH + "\n fileId = {}, path = {}", fileId, attachFile.getPath()
+            );
+        }
+    }
+
+    public void deleteFile(File file) {
+        if(!file.exists()) {
+            log.error(
+                    NotFoundErrorResult.NOT_EXIST_FILE_PATH.name() + " occur.\n"
+                            + NotFoundErrorResult.NOT_EXIST_FILE_PATH + "\n path = {}", file.getPath()
+            );
+            return;
+        }
+
+        if(!file.delete()) {
+            throw new FileRequestException(FileErrorResult.FAIL_REMOVE_FILE, file.getName());
         }
     }
 }
