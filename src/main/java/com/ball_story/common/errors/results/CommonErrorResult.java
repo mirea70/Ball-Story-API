@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum CommonErrorResult {
+public enum CommonErrorResult implements ErrorResult {
     UNKNOWN_EXCEPTION("Unknown Exception");
 
     private final String message;

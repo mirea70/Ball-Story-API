@@ -8,4 +8,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileRequestException extends RuntimeException {
     private final FileErrorResult errorResult;
+    private final String fileName;
 }
