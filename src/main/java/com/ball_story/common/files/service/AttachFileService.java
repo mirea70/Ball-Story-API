@@ -11,6 +11,7 @@ import com.ball_story.common.files.enums.FileExtension;
 import com.ball_story.common.files.repository.AttachFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 @Service
@@ -30,7 +32,8 @@ public class AttachFileService {
     private final String rootPath = System.getProperty("user.home");
     private final String fileDefaultDir = rootPath + "/files";
 
-    public List<AttachFileResponse> uploadFiles(List<Long> fileIds, List<MultipartFile> multipartFiles) throws IOException {
+    @Async
+    public CompletableFuture<List<AttachFileResponse>> uploadFiles(List<Long> fileIds, List<MultipartFile> multipartFiles) {
         if(multipartFiles == null || multipartFiles.isEmpty()) return  null;
         if(fileIds.size() != multipartFiles.size()) {
             throw new SystemException(SystemErrorResult.NOT_MATCH_FILE_ID_COUNT);
@@ -40,7 +43,7 @@ public class AttachFileService {
         for(int i=0; i< fileIds.size(); i++) {
             responses.add(this.uploadFile(fileIds.get(i), multipartFiles.get(i)));
         }
-        return responses;
+        return CompletableFuture.completedFuture(responses);
     }
 
     public AttachFileResponse uploadFile(Long fileId, MultipartFile multipartFile) {
@@ -62,7 +65,7 @@ public class AttachFileService {
                 path
         );
         try {
-            attachFileRepository.save(newFile);
+            attachFileRepository.insert(newFile);
         } catch (Exception e) {
             deleteFile(file);
             throw new SystemException(SystemErrorResult.UNKNOWN);
@@ -128,7 +131,7 @@ public class AttachFileService {
         File file = new File(getFullPath(attachFile.getPath()));
         if(file.exists()) {
             if(file.delete()) {
-                attachFileRepository.delete(fileId);
+                attachFileRepository.deleteById(fileId);
             }
             else {
                 throw new FileRequestException(FileErrorResult.FAIL_REMOVE_FILE, attachFile.getName());

@@ -18,7 +18,7 @@ public class HomeStadiumService {
     @Transactional
     public Long create(StadiumCreateRequest request) {
         HomeStadium homeStadium = HomeStadium.of(request);
-        homeStadiumRepository.save(homeStadium);
+        homeStadiumRepository.insert(homeStadium);
 
         return homeStadium.getStadiumId();
     }

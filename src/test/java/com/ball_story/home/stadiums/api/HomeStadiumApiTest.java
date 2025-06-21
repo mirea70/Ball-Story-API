@@ -2,7 +2,9 @@ package com.ball_story.home.stadiums.api;
 
 import com.ball_story.home.stadiums.dto.StadiumCreateRequest;
 import com.ball_story.home.stadiums.dto.StadiumResponse;
+import com.ball_story.home.stadiums.entity.HomeStadium;
 import com.ball_story.home.stadiums.helper.HomeStadiumHelper;
+import com.ball_story.home.stadiums.repository.HomeStadiumRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,8 @@ public class HomeStadiumApiTest {
     private RestClient restClient;
     @Autowired
     private HomeStadiumHelper homeStadiumHelper;
+    @Autowired
+    private HomeStadiumRepository homeStadiumRepository;
 
     @BeforeAll
     public void setup() {
@@ -41,6 +45,9 @@ public class HomeStadiumApiTest {
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).isNotNull();
         log.info("stadiumId = {}", response.getBody());
+
+        HomeStadium homeStadium = homeStadiumRepository.selectById(response.getBody());
+        System.out.println("homeStadium = " + homeStadium);
     }
 
     @Test

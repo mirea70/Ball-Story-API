@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class FileModuleTest {
     @Autowired
     private AttachFileService attachFileService;
@@ -25,16 +27,13 @@ public class FileModuleTest {
     @Autowired
     private FileTestHelper fileTestHelper;
 
-    private final String rootPath = System.getProperty("user.home");
-    private final String fileDefaultDir = rootPath + "/files";
-
     @Test
     void uploadAndDeleteTest() throws Exception {
         MockMultipartFile mockFile = fileTestHelper.getTestFile();
 
         // 업로드 테스트
         AttachFileResponse response = attachFileService.uploadFile(idGenerator.nextId(), mockFile);
-        File file = new File(getFullPath(response.getPath()));
+        File file = new File(fileTestHelper.getFullPath(response.getPath()));
         assertThat(file).exists();
         assertThat(attachFileRepository.findById(
                 response.getFileId())
@@ -46,9 +45,5 @@ public class FileModuleTest {
         assertThat(attachFileRepository.findById(
                 response.getFileId())
         ).isEmpty();
-    }
-
-    private String getFullPath(String uploadFileName) {
-        return fileDefaultDir + "/" + uploadFileName;
     }
 }
