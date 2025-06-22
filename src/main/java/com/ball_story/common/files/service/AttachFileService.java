@@ -1,5 +1,6 @@
 package com.ball_story.common.files.service;
 
+import com.ball_story.common.app.AppInfo;
 import com.ball_story.common.errors.exceptions.FileRequestException;
 import com.ball_story.common.errors.exceptions.SystemException;
 import com.ball_story.common.errors.results.FileErrorResult;
@@ -44,6 +45,11 @@ public class AttachFileService {
             responses.add(this.uploadFile(fileIds.get(i), multipartFiles.get(i)));
         }
         return CompletableFuture.completedFuture(responses);
+    }
+
+    @Async
+    public CompletableFuture<AttachFileResponse> uploadFileAsync(Long fileId, MultipartFile multipartFile) {
+        return CompletableFuture.completedFuture(uploadFile(fileId, multipartFile));
     }
 
     public AttachFileResponse uploadFile(Long fileId, MultipartFile multipartFile) {
@@ -156,5 +162,18 @@ public class AttachFileService {
         if(!file.delete()) {
             throw new FileRequestException(FileErrorResult.FAIL_REMOVE_FILE, file.getName());
         }
+    }
+
+    @Async
+    public CompletableFuture<List<String>> generateFileUrl(List<String> paths) {
+        List<String> fileUrls = new ArrayList<>();
+        for(String path : paths) {
+            fileUrls.add(generateFileUrl(path));
+        }
+        return CompletableFuture.completedFuture(fileUrls);
+    }
+
+    public String generateFileUrl(String path) {
+        return AppInfo.getUrlPrefix() + path;
     }
 }

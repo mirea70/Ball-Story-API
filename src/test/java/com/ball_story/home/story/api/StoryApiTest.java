@@ -6,7 +6,9 @@ import com.ball_story.home.files.helper.FileTestHelper;
 import com.ball_story.home.story.dto.StoryCreateRequest;
 import com.ball_story.home.story.dto.StoryResponse;
 import com.ball_story.home.story.entity.Story;
+import com.ball_story.home.story.entity.StoryImage;
 import com.ball_story.home.story.helper.StoryTestHelper;
+import com.ball_story.home.story.repository.StoryImageRepository;
 import com.ball_story.home.story.repository.StoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -48,6 +49,8 @@ public class StoryApiTest {
     private AttachFileRepository attachFileRepository;
     @Autowired
     private StoryRepository storyRepository;
+    @Autowired
+    private StoryImageRepository storyImageRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -70,28 +73,26 @@ public class StoryApiTest {
                 storyTestHelper.getTestCreateRequest(),
                 storyImgs
         );
+        Long savedStoryId = response.getBody();
 
         // 1. 스토리가 잘 저장되었는가
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).isNotNull();
-        log.info("storyId = {}", response.getBody());
+        log.info("storyId = {}", savedStoryId);
 
         // 2. 저장된 스토리 데이터의 이미지 키값들의 개수가 요청 이미지 개수와 동일한가?
         int requestImgCount = storyImgs.size();
-        Story created = storyRepository.selectById(response.getBody());
+        Story created = storyRepository.selectById(savedStoryId);
         assertThat(created).isNotNull();
 
-        List<Long> savedStoryImgIds = created.getStoryImgIds();
-        int savedImgCount = 0;
-        if(!CollectionUtils.isEmpty(savedStoryImgIds)) savedImgCount += savedStoryImgIds.size();
-
-        assertThat(savedImgCount).isEqualTo(requestImgCount);
+        List<StoryImage> savedImgs = storyImageRepository.selectByStoryId(response.getBody());
+        assertThat(savedImgs.size()).isEqualTo(requestImgCount);
 
         // 3. 저장된 이미지들의 키값들의 정보로 파일이 존재하는지 확인하면 그 파일이 로컬에 제대로 존재하고 있는가?
-        for(Long subImgId : savedStoryImgIds) {
-            Optional<AttachFile> savedSubImg = attachFileRepository.findById(subImgId);
-            assertThat(savedSubImg).isNotEmpty();
-            assertThat(new File(fileTestHelper.getFullPath(savedSubImg.get().getPath()))).exists();
+        for(StoryImage storyImage : savedImgs) {
+            Optional<AttachFile> savedImg = attachFileRepository.findById(storyImage.getFileId());
+            assertThat(savedImg).isNotEmpty();
+            assertThat(new File(fileTestHelper.getFullPath(savedImg.get().getPath()))).exists();
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
 public class StoryResponse {
     private final Long storyId;
     private final Story.Category category;
-    private final List<Long> storyImgIds;
+    private final List<String> storyImgPaths;
     private final String analysisTarget;
     private final String viewPlace;
     private final String content;
@@ -25,7 +25,7 @@ public class StoryResponse {
         return StoryResponse.builder()
                 .storyId(story.getStoryId())
                 .category(story.getCategory())
-                .storyImgIds(story.getStoryImgIds())
+//                .storyImgPaths(story.getStoryImgIds())
                 .analysisTarget(story.getAnalysisTarget())
                 .viewPlace(story.getViewPlace())
                 .content(story.getContent())
@@ -37,10 +37,10 @@ public class StoryResponse {
     }
 
     @Builder(access = AccessLevel.PRIVATE)
-    private StoryResponse(Long storyId, Story.Category category, List<Long> storyImgIds, String analysisTarget, String viewPlace, String content, Long writerId, LocalDateTime storyAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    private StoryResponse(Long storyId, Story.Category category, List<String> storyImgPaths, String analysisTarget, String viewPlace, String content, Long writerId, LocalDateTime storyAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.storyId = storyId;
         this.category = category;
-        this.storyImgIds = storyImgIds;
+        this.storyImgPaths = storyImgPaths;
         this.analysisTarget = analysisTarget;
         this.viewPlace = viewPlace;
         this.content = content;

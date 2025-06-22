@@ -1,14 +1,11 @@
 package com.ball_story.home.story.entity;
 
-import com.ball_story.common.utils.LongListTypeHandler;
 import com.ball_story.home.story.dto.StoryCreateRequest;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -16,8 +13,6 @@ public class Story {
     @TableId(value = "story_id", type = IdType.AUTO)
     private Long storyId;
     private Category category;
-    @TableField(value = "story_image_ids", typeHandler = LongListTypeHandler.class)
-    private List<Long> storyImgIds;
     private String analysisTarget;
     private String viewPlace;
     private String content;
@@ -45,10 +40,8 @@ public class Story {
     }
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Story(Long storyId, Category category, List<Long> storyImgIds, String analysisTarget, String viewPlace, String content, Long writerId, LocalDateTime storyAt, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.storyId = storyId;
+    private Story(Category category, String analysisTarget, String viewPlace, String content, Long writerId, LocalDateTime storyAt, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
         this.category = category;
-        this.storyImgIds = storyImgIds;
         this.analysisTarget = analysisTarget;
         this.viewPlace = viewPlace;
         this.content = content;
@@ -63,7 +56,6 @@ public class Story {
     public static Story of(StoryCreateRequest request) {
         return Story.builder()
                 .category(request.getCategory())
-                .storyImgIds(request.getStoryImgIds())
                 .analysisTarget(request.getAnalysisTarget())
                 .viewPlace(request.getViewPlace())
                 .content(request.getContent())
