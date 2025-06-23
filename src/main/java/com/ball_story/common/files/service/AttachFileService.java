@@ -32,7 +32,8 @@ public class AttachFileService {
     private final AppInfo appInfo;
 
     private final String rootPath = System.getProperty("user.home");
-    private final String fileDefaultDir = rootPath + "/files";
+    private final String filePrefix = "/files";
+    private final String fileDefaultDir = rootPath + filePrefix;
 
     @Async
     public CompletableFuture<List<AttachFileResponse>> uploadFiles(List<Long> fileIds, List<MultipartFile> multipartFiles) {
@@ -92,7 +93,7 @@ public class AttachFileService {
         String uploadFileName = file.getOriginalFilename();
         String extension = extractExt(uploadFileName);
 
-        return rawFileName + "_" + UUID.randomUUID() + "." + extension;
+        return filePrefix + "/" + rawFileName + "_" + UUID.randomUUID() + "." + extension;
     }
 
     private void validateFileName(String rawFileName) {
@@ -185,6 +186,6 @@ public class AttachFileService {
     }
 
     public String generateFileUrl(String path) {
-        return appInfo.getUrlPrefix() + getFullPath(path);
+        return appInfo.getUrlPrefix() + path;
     }
 }
