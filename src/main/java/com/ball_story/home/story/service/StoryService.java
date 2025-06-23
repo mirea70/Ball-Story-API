@@ -35,16 +35,13 @@ public class StoryService {
     private final SnowflakeIDGenerator snowflakeIDGenerator;
 
     public StoryResponse findOne(Long storyId) {
-        return StoryResponse.from(
-                storyRepository.findById(storyId)
-                        .orElseThrow(() -> new NotFoundException(NotFoundErrorResult.NOT_FOUND_STORY_DATA))
-        );
+        return storyRepository.selectWithImgPaths(storyId)
+                .orElseThrow(() -> new NotFoundException(NotFoundErrorResult.NOT_FOUND_STORY_DATA));
     }
 
     /**
      * 스토리 저장 && 이미지 저장 비동기 처리
      */
-    // Todo: 이미지들 Story에 String으로 관리 -> 중계 테이블 관리로 변경
     @Transactional
     public Long create(StoryCreateRequest request, List<MultipartFile> storyImgs) {
         List<Long> storyImgIds = snowflakeIDGenerator.generateIds(storyImgs != null ? storyImgs.size() : 0);

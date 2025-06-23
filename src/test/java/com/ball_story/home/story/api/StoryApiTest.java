@@ -116,6 +116,19 @@ public class StoryApiTest {
                 .toEntity(Long.class);
     }
 
+    @Test
+    void findOneTest() throws Exception {
+        ResponseEntity<Long> savedResponse = create(
+                storyTestHelper.getTestCreateRequest(),
+                fileTestHelper.getTestFiles()
+        );
+        Long savedStoryId = savedResponse.getBody();
+
+        ResponseEntity<StoryResponse> response = findOne(savedStoryId);
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(response.getBody()).isNotNull();
+    }
+
     private ResponseEntity<StoryResponse> findOne(Long storyId) {
         return restClient.get()
                 .uri("/v1/stories/{storyId}", storyId)
