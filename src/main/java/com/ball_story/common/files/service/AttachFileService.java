@@ -29,12 +29,14 @@ import java.util.regex.Pattern;
 @Slf4j
 public class AttachFileService {
     private final AttachFileRepository attachFileRepository;
+    private final AppInfo appInfo;
 
     private final String rootPath = System.getProperty("user.home");
     private final String fileDefaultDir = rootPath + "/files";
 
     @Async
     public CompletableFuture<List<AttachFileResponse>> uploadFiles(List<Long> fileIds, List<MultipartFile> multipartFiles) {
+        log.info("[AttachFileService.uploadFiles] start..");
         if(multipartFiles == null || multipartFiles.isEmpty()) return  null;
         if(fileIds.size() != multipartFiles.size()) {
             throw new SystemException(SystemErrorResult.NOT_MATCH_FILE_ID_COUNT);
@@ -53,6 +55,7 @@ public class AttachFileService {
     }
 
     public AttachFileResponse uploadFile(Long fileId, MultipartFile multipartFile) {
+        log.info("[AttachFileService.uploadFile] start..");
         if(multipartFile == null) return null;
 
         String path = getStoreFileName(multipartFile);
@@ -62,6 +65,7 @@ public class AttachFileService {
         try {
             multipartFile.transferTo(file);
         } catch (IOException e) {
+            log.info("[IOException] occur. \nfile path = {}", path);
             throw new FileRequestException(FileErrorResult.FAIL_UPLOAD_FILE, multipartFile.getOriginalFilename());
         }
 
@@ -73,6 +77,7 @@ public class AttachFileService {
         try {
             attachFileRepository.insert(newFile);
         } catch (Exception e) {
+            log.error("[AttachFileRepository.insert] Failed. \nfile object info = {}\nerrors: \n{}", newFile.toString(), e.toString());
             deleteFile(file);
             throw new SystemException(SystemErrorResult.UNKNOWN);
         }
@@ -173,7 +178,13 @@ public class AttachFileService {
         return CompletableFuture.completedFuture(fileUrls);
     }
 
+    public void convertFileUrls(List<String> paths) {
+        for(int i=0; i< paths.size(); i++) {
+            paths.set(i, generateFileUrl(paths.get(i)));
+        }
+    }
+
     public String generateFileUrl(String path) {
-        return AppInfo.getUrlPrefix() + path;
+        return appInfo.getUrlPrefix() + getFullPath(path);
     }
 }

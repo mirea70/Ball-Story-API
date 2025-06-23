@@ -12,7 +12,7 @@ import java.util.List;
 public class StoryResponse {
     private Long storyId;
     private Story.Category category;
-    private List<String> storyImgPaths;
+    private List<String> storyImgUrls;
     private String analysisTarget;
     private String viewPlace;
     private String content;

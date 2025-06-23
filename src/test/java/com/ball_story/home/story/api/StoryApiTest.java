@@ -127,6 +127,8 @@ public class StoryApiTest {
         ResponseEntity<StoryResponse> response = findOne(savedStoryId);
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).isNotNull();
+
+        log.info("story = \n{}", response);
     }
 
     private ResponseEntity<StoryResponse> findOne(Long storyId) {

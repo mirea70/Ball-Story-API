@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -35,8 +36,10 @@ public class StoryService {
     private final SnowflakeIDGenerator snowflakeIDGenerator;
 
     public StoryResponse findOne(Long storyId) {
-        return storyRepository.selectWithImgPaths(storyId)
+        StoryResponse response = storyRepository.selectWithImgPaths(storyId)
                 .orElseThrow(() -> new NotFoundException(NotFoundErrorResult.NOT_FOUND_STORY_DATA));
+        attachFileService.convertFileUrls(response.getStoryImgUrls());
+        return response;
     }
 
     /**
@@ -69,7 +72,9 @@ public class StoryService {
             for(Long storyImgId : storyImgIds) {
                 storyImages.add(StoryImage.of(storyId, storyImgId));
             }
-            storyImageRepository.insertBatch(storyImages);
+            if(!CollectionUtils.isEmpty(storyImages)) {
+                storyImageRepository.insertBatch(storyImages);
+            }
             return story;
         } catch (Exception e) {
             waitImgUploadNoMatter(uploadFuture); // 업로드 처리 완료 대기

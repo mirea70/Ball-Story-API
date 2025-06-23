@@ -1,14 +1,16 @@
 package com.ball_story.common.app;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AppInfo {
     @Value("${app.scheme}")
-    private static String scheme;
+    private String scheme;
     @Value("${app.host}")
-    private static String host;
+    private String host;
 
-    public static String getUrlPrefix() {
-        return scheme +  "://" + host + "/";
+    public String getUrlPrefix() {
+        return scheme +  "://" + host;
     }
 }
