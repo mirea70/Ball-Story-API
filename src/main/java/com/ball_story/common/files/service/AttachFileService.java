@@ -115,7 +115,7 @@ public class AttachFileService {
     }
 
     private String getFullPath(String uploadFileName) {
-        return fileDefaultDir + "/" + uploadFileName;
+        return rootPath + "/" + uploadFileName;
     }
 
     /**
