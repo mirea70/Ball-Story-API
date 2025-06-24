@@ -9,6 +9,8 @@ import com.ball_story.common.files.dto.AttachFileResponse;
 import com.ball_story.common.files.service.AttachFileService;
 import com.ball_story.common.utils.SnowflakeIDGenerator;
 import com.ball_story.home.story.dto.StoryCreateRequest;
+import com.ball_story.home.story.dto.StoryPageRequest;
+import com.ball_story.home.story.dto.StoryPageResponse;
 import com.ball_story.home.story.dto.StoryResponse;
 import com.ball_story.home.story.entity.Story;
 import com.ball_story.home.story.entity.StoryImage;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -34,13 +37,6 @@ public class StoryService {
     private final StoryImageRepository storyImageRepository;
     private final AttachFileService attachFileService;
     private final SnowflakeIDGenerator snowflakeIDGenerator;
-
-    public StoryResponse findOne(Long storyId) {
-        StoryResponse response = storyRepository.selectWithImgPaths(storyId)
-                .orElseThrow(() -> new NotFoundException(NotFoundErrorResult.NOT_FOUND_STORY_DATA));
-        attachFileService.convertFileUrls(response.getStoryImgUrls());
-        return response;
-    }
 
     /**
      * 스토리 저장 && 이미지 저장 비동기 처리
@@ -101,5 +97,21 @@ public class StoryService {
         } catch (Exception ignore) {
             // 업로드 실패든 뭐든 일단 기다리기만 하면 됨
         }
+    }
+
+    public StoryResponse findOne(Long storyId) {
+        StoryResponse response = storyRepository.selectWithImgPaths(storyId)
+                .orElseThrow(() -> new NotFoundException(NotFoundErrorResult.NOT_FOUND_STORY_DATA));
+        attachFileService.convertFileUrls(response.getStoryImgUrls());
+        return response;
+    }
+
+    public List<StoryPageResponse> findAll(StoryPageRequest request) {
+        Integer size = request.getSize();
+        LocalDateTime lastStoryAt = request.getLastStoryAt();
+        List<StoryPageResponse> responses = request.getLastStoryAt() == null ?
+                storyRepository.selectAllInit(size) :
+                storyRepository.selectAll(size, lastStoryAt);
+        return responses;
     }
 }

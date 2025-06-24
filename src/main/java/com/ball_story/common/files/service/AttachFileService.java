@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class AttachFileService {
     private final AttachFileRepository attachFileRepository;
-    private final AppInfo appInfo;
+//    private static final AppInfo appInfo;
 
     private final String rootPath = System.getProperty("user.home");
     private final String filePrefix = "/files";
@@ -185,7 +185,10 @@ public class AttachFileService {
         }
     }
 
-    public String generateFileUrl(String path) {
-        return appInfo.getUrlPrefix() + path;
+    public static String generateFileUrl(String path) {
+        if(path.startsWith(AppInfo.getUrlPrefix())) {
+            return path;
+        }
+        return AppInfo.getUrlPrefix() + path;
     }
 }

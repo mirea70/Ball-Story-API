@@ -18,4 +18,15 @@ public class StoryTestHelper {
                 .storyAt(LocalDateTime.now())
                 .build();
     }
+
+    public StoryCreateRequest getTestCreateRequest(String content) {
+        return StoryCreateRequest.builder()
+                .category(Story.Category.REVIEW)
+                .analysisTarget("분석대상")
+                .viewPlace("본 장소")
+                .content("스토리 내용")
+                .writerId(1L)
+                .storyAt(LocalDateTime.now())
+                .build();
+    }
 }

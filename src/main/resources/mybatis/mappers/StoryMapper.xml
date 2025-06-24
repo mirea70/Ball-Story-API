@@ -38,4 +38,35 @@
         AND s.deleted_at IS NULL
         ORDER BY si.orders ASC
     </select>
+
+    <select id="selectAllInit" resultType="StoryPageResponse">
+        SELECT
+            s.story_id,
+            s.content,
+            s.category,
+            s.story_at,
+            f.path AS thumbNameImgUrl
+        FROM story s
+                 LEFT JOIN story_image si ON si.story_id = s.story_id AND si.orders = 0
+                 LEFT JOIN attach_file f ON f.file_id = si.file_id
+        WHERE s.deleted_at IS NULL
+        ORDER BY story_at DESC
+        LIMIT #{size}
+    </select>
+
+    <select id="selectAll" resultType="StoryPageResponse">
+        SELECT
+            s.story_id,
+            s.content,
+            s.category,
+            s.story_at,
+            f.path AS thumbNameImgUrl
+        FROM story s
+                 LEFT JOIN story_image si ON si.story_id = s.story_id AND si.orders = 0
+                 LEFT JOIN attach_file f ON f.file_id = si.file_id
+        WHERE s.story_at &lt; #{lastStoryAt}
+        AND s.deleted_at IS NULL
+        ORDER BY story_at DESC
+        LIMIT #{size}
+    </select>
 </mapper>

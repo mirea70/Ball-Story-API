@@ -1,6 +1,8 @@
 package com.ball_story.home.story.controller;
 
 import com.ball_story.home.story.dto.StoryCreateRequest;
+import com.ball_story.home.story.dto.StoryPageRequest;
+import com.ball_story.home.story.dto.StoryPageResponse;
 import com.ball_story.home.story.dto.StoryResponse;
 import com.ball_story.home.story.service.StoryService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,13 @@ public class StoryController {
     public ResponseEntity<StoryResponse> findOne(@PathVariable Long storyId) {
         return ResponseEntity.ok(
                 storyService.findOne(storyId)
+        );
+    }
+
+    @GetMapping("/v1/stories/list")
+    public ResponseEntity<List<StoryPageResponse>> findAll(StoryPageRequest request) {
+        return ResponseEntity.ok(
+                storyService.findAll(request)
         );
     }
 }
