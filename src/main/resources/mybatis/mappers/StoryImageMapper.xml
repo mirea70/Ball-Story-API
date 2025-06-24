@@ -5,10 +5,10 @@
 
 <mapper namespace="com.ball_story.home.story.repository.StoryImageRepository">
     <insert id="insertBatch">
-        INSERT INTO story_image (story_id, file_id, created_at)
+        INSERT INTO story_image (story_id, file_id, orders, created_at)
         VALUES
             <foreach collection="storyImages" item="item" separator=",">
-                (#{item.storyId}, #{item.fileId}, #{item.createdAt})
+                (#{item.storyId}, #{item.fileId}, #{item.orders}, #{item.createdAt})
             </foreach>
     </insert>
     <select id="selectByStoryId" resultType="StoryImage">

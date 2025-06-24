@@ -69,9 +69,10 @@ public class StoryService {
 
             Long storyId = story.getStoryId();
             List<StoryImage> storyImages = new ArrayList<>();
-            for(Long storyImgId : storyImgIds) {
-                storyImages.add(StoryImage.of(storyId, storyImgId));
+            for(int i=0; i<storyImgIds.size(); i++) {
+                storyImages.add(StoryImage.of(storyId, storyImgIds.get(i), i));
             }
+
             if(!CollectionUtils.isEmpty(storyImages)) {
                 storyImageRepository.insertBatch(storyImages);
             }

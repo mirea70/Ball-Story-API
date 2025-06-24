@@ -17,7 +17,6 @@ import java.util.List;
 public class FileTestHelper {
 
     private final String rootPath = System.getProperty("user.home");
-    private final String fileDefaultDir = rootPath + "/files";
 
     public MockMultipartFile getTestFile() throws IOException {
         String testResourceName = "testImage.jpg";
@@ -70,6 +69,6 @@ public class FileTestHelper {
     }
 
     public String getFullPath(String uploadFileName) {
-        return fileDefaultDir + "/" + uploadFileName;
+        return rootPath + "/" + uploadFileName;
     }
 }

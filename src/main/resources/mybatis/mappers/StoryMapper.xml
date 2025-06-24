@@ -36,5 +36,6 @@
         LEFT JOIN attach_file f ON f.file_id = si.file_id
         WHERE s.story_id = #{storyId}
         AND s.deleted_at IS NULL
+        ORDER BY si.orders ASC
     </select>
 </mapper>
