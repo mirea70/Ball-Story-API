@@ -2,7 +2,7 @@ package com.ball_story.home.story.api;
 
 import com.ball_story.common.files.entity.AttachFile;
 import com.ball_story.common.files.repository.AttachFileRepository;
-import com.ball_story.home.files.helper.FileTestHelper;
+import com.ball_story.common.files.helper.FileTestHelper;
 import com.ball_story.home.story.dto.StoryCreateRequest;
 import com.ball_story.home.story.dto.StoryPageResponse;
 import com.ball_story.home.story.dto.StoryResponse;

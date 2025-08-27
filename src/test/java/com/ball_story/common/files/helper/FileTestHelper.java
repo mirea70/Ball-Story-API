@@ -1,4 +1,4 @@
-package com.ball_story.home.files.helper;
+package com.ball_story.common.files.helper;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;

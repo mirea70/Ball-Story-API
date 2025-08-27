@@ -1,10 +1,10 @@
-package com.ball_story.home.files.module;
+package com.ball_story.common.files.module;
 
 import com.ball_story.common.files.dto.AttachFileResponse;
+import com.ball_story.common.files.helper.FileTestHelper;
 import com.ball_story.common.files.repository.AttachFileRepository;
 import com.ball_story.common.files.service.AttachFileService;
 import com.ball_story.common.utils.SnowflakeIDGenerator;
-import com.ball_story.home.files.helper.FileTestHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
