@@ -44,7 +44,7 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// Crawling
-	implementation 'org.seleniumhq.selenium:selenium-java:4.33.0'
+	implementation 'org.seleniumhq.selenium:selenium-java:4.35.0'
 }
 
 tasks.named('test') {

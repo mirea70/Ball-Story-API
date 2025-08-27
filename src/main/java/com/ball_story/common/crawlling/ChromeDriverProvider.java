@@ -5,11 +5,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 
-import static com.ball_story.common.crawlling.constant.CrawlingConstant.*;
+import static com.ball_story.common.crawlling.constant.CrawlingConstant.WEB_OPEN_WAIT_TIME_SC;
 
 @Slf4j
 public class ChromeDriverProvider {
@@ -28,8 +26,8 @@ public class ChromeDriverProvider {
     private static ChromeDriver createChromeDriver() {
         ChromeDriver driver = null;
         try {
-            Path path = Paths.get(System.getProperty("user.dir"), CHROME_DRIVER_PATH);
-            System.setProperty(WEB_DRIVER_ID, path.toString());
+//            Path path = Paths.get(System.getProperty("user.dir"), CHROME_DRIVER_PATH);
+//            System.setProperty(WEB_DRIVER_ID, path.toString());
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless"); // 창 없이 실행하고 싶을 때
             options.addArguments("--no-sandbox");

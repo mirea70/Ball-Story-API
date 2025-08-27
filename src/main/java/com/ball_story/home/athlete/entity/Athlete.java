@@ -5,8 +5,10 @@ import com.ball_story.home.athlete.enums.AthleteType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class Athlete {
     @TableId(type = IdType.INPUT)
     private Long code;
@@ -20,18 +22,21 @@ public class Athlete {
     private Double era;
     private Double whip;
     private Double hitAvg;
-    private Double ops;
+//    private Double ops;
+    private Integer rbi; // 타점
     private Integer hitCount;
     private Integer homeRunCount;
 
-    public static Athlete createHitter(Long code, String name, Team team, AthleteType type, Double hitAvg, Double ops, Integer hitCount, Integer homeRunCount) {
+    // Todo: 타점 -> OPS로 데이터 바뀌어야함 (셀레니움 이슈)
+    public static Athlete createHitter(Long code, String name, Team team, AthleteType type, Double hitAvg, Integer rbi, Integer hitCount, Integer homeRunCount) {
         Athlete athlete = new Athlete();
         athlete.code = code;
         athlete.name = name;
         athlete.team = team;
         athlete.type = type;
         athlete.hitAvg = hitAvg;
-        athlete.ops = ops;
+        athlete.rbi = rbi;
+//        athlete.ops = ops;
         athlete.hitCount = hitCount;
         athlete.homeRunCount = homeRunCount;
 
@@ -53,4 +58,8 @@ public class Athlete {
 
         return athlete;
     }
+
+//    public void updateOps(Double ops) {
+//        this.ops = ops;
+//    }
 }
