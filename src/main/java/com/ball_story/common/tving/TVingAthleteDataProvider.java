@@ -3,7 +3,6 @@ package com.ball_story.common.tving;
 import com.ball_story.common.enums.Team;
 import com.ball_story.common.tving.constant.TVingConstant;
 import com.ball_story.home.athlete.entity.Athlete;
-import com.ball_story.home.athlete.enums.AthleteType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
@@ -56,9 +55,9 @@ public class TVingAthleteDataProvider {
                 Double wrcPlus = athlete.path("wrcPlus").asDouble();
                 Double war = athlete.path("war").asDouble();
 
-                athletes.add(Athlete.createHitter(
-                        code, name, team, AthleteType.HITTER, hitAvg, ops, wrcPlus, war
-                ));
+//                athletes.add(Athlete.createHitter(
+//                        code, name, team, AthleteType.HITTER, hitAvg, ops, wrcPlus, war
+//                ));
             }
             return athletes;
 
