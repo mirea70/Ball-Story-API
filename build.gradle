@@ -42,6 +42,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'com.baomidou:mybatis-plus-spring-boot3-starter:3.5.12'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// Crawling
+	implementation 'org.seleniumhq.selenium:selenium-java:4.33.0'
 }
 
 tasks.named('test') {
