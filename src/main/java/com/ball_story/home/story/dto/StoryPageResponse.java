@@ -17,8 +17,6 @@ public class StoryPageResponse {
     private LocalDateTime storyAt;
 
     public void setThumbNameImgUrl(String thumbNameImgUrl) {
-        // ToDo: Mybatis Setter 매핑시 Setter 두 번 호출되는 문제 해결 필요
-//        System.out.println("[MyBatis] setThumbNameImgUrl called with: " + storyId + " - " + thumbNameImgUrl);
         this.thumbNameImgUrl = AttachFileService.generateFileUrl(thumbNameImgUrl);
     }
 }
