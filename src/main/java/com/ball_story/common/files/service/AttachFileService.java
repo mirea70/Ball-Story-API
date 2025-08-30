@@ -186,7 +186,7 @@ public class AttachFileService {
     }
 
     public static String generateFileUrl(String path) {
-        if(path.startsWith(AppInfo.getUrlPrefix())) {
+        if(path != null && path.startsWith(AppInfo.getUrlPrefix())) {
             return path;
         }
         return AppInfo.getUrlPrefix() + path;
