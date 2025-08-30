@@ -13,4 +13,14 @@
           AND name = #{name}
           AND type = #{type}
     </select>
+
+    <select id="findAllByTeam" resultType="AthleteResponse">
+        SELECT code, team, a.name,
+               win, loose, hold, save, era, whip,
+               hit_avg, rbi, hit_count, homeRun_count,
+               type, f.path AS imageUrl
+            FROM athlete a
+            LEFT JOIN attach_file f ON a.image_id = f.file_id
+            WHERE team = #{team}
+    </select>
 </mapper>

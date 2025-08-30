@@ -1,23 +1,32 @@
 package com.ball_story.home.athlete.service;
 
 import com.ball_story.common.crawlling.KBOCrawler;
+import com.ball_story.common.enums.Team;
 import com.ball_story.common.utils.SnowflakeIDGenerator;
+import com.ball_story.home.athlete.dto.AthleteResponse;
 import com.ball_story.home.athlete.entity.Athlete;
 import com.ball_story.home.athlete.entity.NameSakeAthlete;
 import com.ball_story.home.athlete.repository.AthleteRepository;
 import com.ball_story.home.athlete.repository.NameSakeAthleteRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AthleteService {
     private final AthleteRepository athleteRepository;
     private final NameSakeAthleteRepository nameSakeAthleteRepository;
     private final SnowflakeIDGenerator idGenerator;
     private final KBOCrawler kboCrawler;
+
+    public List<AthleteResponse> findAll(Team team) {
+        log.info("[AthleteService] findAll(Team team) start...");
+        return athleteRepository.findAllByTeam(team.toString());
+    }
 
     public void initAthleteData() throws InterruptedException {
         List<Athlete> athletes = kboCrawler.getKboAthleteData();
