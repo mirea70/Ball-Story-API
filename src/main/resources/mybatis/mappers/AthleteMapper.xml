@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ball_story.home.athlete.repository.AthleteRepository">
+    <select id="findByTeamAndName" resultType="Athlete">
+        SELECT code, team, name,
+               win, loose, hold, save, era, whip,
+               hit_avg, rbi, hit_count, homeRun_count, image_id
+        FROM athlete
+        WHERE team = #{team}
+          AND name = #{name}
+          AND type = #{type}
+    </select>
+</mapper>
