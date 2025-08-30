@@ -2,6 +2,9 @@ package com.ball_story.home.athlete.service;
 
 import com.ball_story.common.crawlling.KBOCrawler;
 import com.ball_story.common.enums.Team;
+import com.ball_story.common.errors.exceptions.NotFoundException;
+import com.ball_story.common.errors.results.NotFoundErrorResult;
+import com.ball_story.common.files.service.AttachFileService;
 import com.ball_story.common.utils.SnowflakeIDGenerator;
 import com.ball_story.home.athlete.dto.AthleteResponse;
 import com.ball_story.home.athlete.entity.Athlete;
@@ -11,6 +14,8 @@ import com.ball_story.home.athlete.repository.NameSakeAthleteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,10 +27,24 @@ public class AthleteService {
     private final NameSakeAthleteRepository nameSakeAthleteRepository;
     private final SnowflakeIDGenerator idGenerator;
     private final KBOCrawler kboCrawler;
+    private final AttachFileService fileService;
 
     public List<AthleteResponse> findAll(Team team) {
         log.info("[AthleteService] findAll(Team team) start...");
         return athleteRepository.findAllByTeam(team.toString());
+    }
+
+    @Transactional
+    public void updateImage(Long code, MultipartFile image) {
+        Athlete athlete = athleteRepository.selectById(code);
+        if(athlete == null) {
+            throw new NotFoundException(NotFoundErrorResult.NOT_FOUND_ATHLETE);
+        }
+
+        Long imageId = idGenerator.nextId();
+        fileService.uploadFile(imageId, image);
+        athlete.updateImgId(imageId);
+        athleteRepository.updateById(athlete);
     }
 
     public void initAthleteData() throws InterruptedException {

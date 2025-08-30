@@ -12,6 +12,7 @@ public enum NotFoundErrorResult implements ErrorResult {
     NOT_FOUND_ENUM_DATA("존재하지 않는 열거형 값입니다."),
     NOT_FOUND_STORY_DATA("존재하지 않는 스토리 값입니다."),
     NOT_FOUND_TEAM_NAME("존재하지 않는 팀 명입니다."),
+    NOT_FOUND_ATHLETE("존재하지 않는 선수입니다."),
     ;
 
     private final String message;

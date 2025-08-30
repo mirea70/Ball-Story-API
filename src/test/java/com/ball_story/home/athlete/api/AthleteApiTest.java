@@ -1,16 +1,26 @@
 package com.ball_story.home.athlete.api;
 
 import com.ball_story.common.enums.Team;
+import com.ball_story.common.files.helper.FileTestHelper;
+import com.ball_story.common.files.repository.AttachFileRepository;
 import com.ball_story.home.athlete.dto.AthleteResponse;
+import com.ball_story.home.athlete.entity.Athlete;
+import com.ball_story.home.athlete.helper.AthleteTestHelper;
+import com.ball_story.home.athlete.repository.AthleteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +34,14 @@ public class AthleteApiTest {
     @LocalServerPort
     private int port;
     private RestClient restClient;
+    @Autowired
+    private AttachFileRepository fileRepository;
+    @Autowired
+    private FileTestHelper fileTestHelper;
+    @Autowired
+    private AthleteRepository athleteRepository;
+    @Autowired
+    private AthleteTestHelper athleteTestHelper;
 
     @BeforeAll
     public void setup() {
@@ -48,5 +66,35 @@ public class AthleteApiTest {
                 .uri("/v1/athletes?team={team}", team)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<>(){});
+    }
+
+    @Test
+    void updateImageTest() throws Exception {
+        // 테스트 선수 데이터 1명 저장
+        Athlete athlete = athleteTestHelper.getTestHitter();
+        athleteRepository.insert(athlete);
+        // 이미지 업데이트
+        ResponseEntity<?> response = updateImage(athlete.getCode(), fileTestHelper.getTestFile());
+        // API 응답 테스트
+        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
+        // 해당 선수 다시 조회
+        Athlete findAthlete = athleteRepository.selectById(athlete.getCode());
+        // 해당 선수 이미지 ID 값이 null이 아닌지 확인
+        assertThat(findAthlete).isNotNull();
+
+        Long imageId = findAthlete.getImageId();
+        assertThat(imageId).isNotNull();
+    }
+
+    private ResponseEntity<Void> updateImage(Long code, MultipartFile image) throws Exception {
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("image", fileTestHelper.convertToResource("image", image));
+
+        return restClient.post()
+                .uri("/v1/athletes/{code}/image", code)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body)
+                .retrieve()
+                .toBodilessEntity();
     }
 }
