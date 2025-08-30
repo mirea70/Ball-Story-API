@@ -1,7 +1,6 @@
 package com.ball_story.common.crawlling;
 
 import com.ball_story.home.athlete.entity.Athlete;
-import com.ball_story.home.athlete.enums.AthleteType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,14 +15,8 @@ public class KboCrawlerTest {
     private KBOCrawler kboCrawler;
 
     @Test
-    void getKboHitterDataTest() throws Exception {
-        List<Athlete> athletes = kboCrawler.getKboAthleteData(AthleteType.HITTER);
-        athletesTest(athletes);
-    }
-
-    @Test
-    void getKboPitcherDataTest() throws Exception {
-        List<Athlete> athletes = kboCrawler.getKboAthleteData(AthleteType.PITCHER);
+    void getKboAthleteDataTest() throws Exception {
+        List<Athlete> athletes = kboCrawler.getKboAthleteData();
         athletesTest(athletes);
     }
 
